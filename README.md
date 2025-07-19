@@ -125,11 +125,11 @@ c. created and named Cognito_YourPoolNameAuth_Role as IAM role :
 
 ## Webapp setup for user to interact using EC2 :
 
-a. launched an ec2 instance
-b. connected to root user through : sudo su - root
-c. install apache server : yum install httpd
-d. started apache server : systemctl enable httpd --now
-e. changed to path created by apache server : cd var/www/html
-f. created a file named hotel_booking.html and created a code having aws credentials that will contact to aws.
+	a. launched an ec2 instance
+	b. connected to root user through : sudo su - root
+	c. install apache server : yum install httpd
+	d. started apache server : systemctl enable httpd --now
+	e. changed to path created by apache server : cd var/www/html
+	f. created a file named hotel_booking.html and created a code having aws credentials that will contact to aws.
 
  
