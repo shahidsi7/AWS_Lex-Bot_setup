@@ -1,4 +1,4 @@
-###AWS_Lex-Bot_setup
+##AWS_Lex-Bot_setup
 ## Selected us-east-1 as a region
 ## Amazon Lex setup:
 
