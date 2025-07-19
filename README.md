@@ -150,6 +150,6 @@ c. created and named Cognito_YourPoolNameAuth_Role as IAM role :
 	c. install apache server : yum install httpd
 	d. started apache server : systemctl enable httpd --now
 	e. changed to path created by apache server : cd var/www/html
-	f. created a file named hotel_booking.html and created a code having aws credentials that will contact to aws.
+	f. created a file named hotel_booking.html and created a code having aws credentials such as cognito identity pool id as well as bot and bot alias id of lex bot that will contact to aws.
 
  
