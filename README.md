@@ -3,9 +3,13 @@
 ## Amazon Lex setup:
 
 1. created a traditional blank bot
+
 2. named it as HotelBookingBot
+
 3. selected iam role for basic amazon lex permission
+
 4. selected no for COPPA
+
 5. selected english as a language:   
 	a. created an intent with a name BookHotel.
 
@@ -57,9 +61,12 @@
 ## Lambda setup which will be trigger dynamodb and store the output of customer in the table : 
 
 a. created a lambda function with the name HotelBookingHandler with python version 3.12
+
 b. created code for lambda
+
 c. created two policy for lambda :
-	1. lex-lambda-invokeFunction, having json code :
+
+1. lex-lambda-invokeFunction, having json code :
 
 			{
 			  "StringEquals": {
@@ -71,8 +78,11 @@ c. created two policy for lambda :
 			}
 
 and, Statement ID : lex-lambda-invokeFunction
+
 Principal : lexv2.amazonaws.com
+
 Effect : Allow
+
 Action : lambda:invokeFunction
 
 
@@ -85,8 +95,11 @@ Action : lambda:invokeFunction
 			}
 
 and, Statement ID : custom_lambda_invoke
+
 Principal : lexv2.amazonaws.com
+
 Effect : Allow
+
 Action : lambda:invokeFunction
 
 
@@ -95,8 +108,11 @@ Action : lambda:invokeFunction
 ## DynamoDB setup : 
 
 a. created table named as HotelBooking
+
 b. named partition key as bookingId having string format
+
 c. created it.
+
 d. whenever client interact with the chatbot lambda get triggered and send the client information in the created table
 
 
@@ -105,10 +121,14 @@ d. whenever client interact with the chatbot lambda get triggered and send the c
 ## Cognito setup for creation of webapp through which user can interact with aws services:
 
 a. created one identity pool named as HotelBookingBotIdentityPool
+
 b. given guest access
+
 c. created and named Cognito_YourPoolNameAuth_Role as IAM role :
-	1. It has one precreated cognito role and extra i  have attached a policy named as AmazonLexFullAccess
-	2. also created another inline policy named as cognito_lex_setup, having json code :
+
+1. It has one precreated cognito role and extra i  have attached a policy named as AmazonLexFullAccess
+
+2. also created another inline policy named as cognito_lex_setup, having json code :
 
 			{
 				"Version": "2012-10-17",
