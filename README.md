@@ -6,27 +6,33 @@
 2. named it as HotelBookingBot
 3. selected iam role for basic amazon lex permission
 4. selected no for COPPA
-5. selected english as a language:
-   
-	a. created an intent with a name BookHotel
+5. selected english as a language:   
+	a. created an intent with a name BookHotel.
+
 	b. created sample utterances which has phases that should be used by the user (content present in utterances.txt).
+
 	c. created slots that will be asked by the chatbot to the user (content present in slot_data.txt)
+
 	d. created custom slot types for :
+
             1. RoomTypeValues having values : [Classic,Duluxe,Suite,Duplex,PentaHouse]
             2. BedType having values : [king bed,Twin bed,Double queen bed,Single bed]
             3. Smoking having values : [non smoking room,smoking room,non smoking,smoking]
             4. PaymentMethod having values : [Credit card,Debit Card,Pay on arrival,Pay at Hotel]
 	e. created confirmation :
+
 		1. confirmation prompt : You're booking a {RoomType} room in {City} ( {HotelName} Hotel Name is provided) for {NumAdults} adult(s) (and {NumChildren} child/children, if applicable). Your check-in date is {CheckInDate} for {NumNights} night(s). We'll confirm the booking to {ContactEmail} or contact {ContactPhone}. Should I go ahead with the booking?
 		2. decline response : No problem. Let me know if you change your mind.
 
 
 	f. created fulfilment :
+
 		1. on successful fulfilment : "Processing your booking..."
 		2. In case of failure : "Sorry, something went wrong. Please try again later."
 
 
 	g. In advance option of fulfilment :
+
 		1. enabled lambda function for fulfilment
 		2. given prompt for fulfilment updates :
 			a. tell the user that fulfilment has started : "The process has started..." 
