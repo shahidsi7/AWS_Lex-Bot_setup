@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>AI Hotel Booker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Ensure it takes full viewport height */
+            margin: 0;
+        }
+        .container {
+            max-width: 600px;
+            width: 95%; /* Make it more responsive on smaller screens */
+            height: 80vh; /* Give the chat window a fixed height for scrolling */
+            display: flex;
+            flex-direction: column;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e0e0e0;
+        }
+        .chat-window {
+            flex-grow: 1; /* Allows the chat window to take available space */
+            overflow-y: auto; /* Enable scrolling for chat messages */
+            padding: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Space between messages */
+            /* Custom scrollbar for better aesthetics */
+            scrollbar-width: thin;
+            scrollbar-color: #a0aec0 #f0f2f5;
+        }
+        .chat-window::-webkit-scrollbar {
+            width: 8px;
+        }
+        .chat-window::-webkit-scrollbar-track {
+            background: #f0f2f5;
+            border-radius: 10px;
+        }
+        .chat-window::-webkit-scrollbar-thumb {
+            background-color: #a0aec0;
+            border-radius: 10px;
+            border: 2px solid #f0f2f5;
+        }
+
+        .message-bubble {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            line-height: 1.4;
+            word-wrap: break-word; /* Ensure long words break */
+        }
+        .user-message {
+            align-self: flex-end; /* Align to the right */
+            background-color: #e0f2fe; /* Light blue */
+            color: #1e40af; /* Darker blue text */
+            border-bottom-right-radius: 2px; /* Sharper corner for user message */
+        }
+        .bot-message {
+            align-self: flex-start; /* Align to the left */
+            background-color: #f0f4f8; /* Light grey */
+            color: #2d3748; /* Dark grey text */
+            border-bottom-left-radius: 2px; /* Sharper corner for bot message */
+        }
+        .chat-input-area {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .chat-input-area input {
+            flex-grow: 1;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 25px; /* Fully rounded input */
+            font-size: 1rem;
+            outline: none; /* Remove default outline */
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
+        }
+        .chat-input-area input:focus {
+            border-color: #6366f1; /* Indigo on focus */
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2); /* Focus ring */
+        }
+        .chat-input-area button {
+            background-color: #6366f1; /* Indigo */
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px; /* Fully rounded button */
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(99, 102, 241, 0.3);
+            border: none; /* Remove default button border */
+        }
+        .chat-input-area button:hover {
+            background-color: #4f46e5; /* Darker indigo on hover */
+            transform: translateY(-1px); /* Slight lift effect */
+        }
+        .chat-input-area button:disabled {
+            background-color: #9ca3af; /* Grey when disabled */
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+        .message-box {
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 500;
+            border-left: 5px solid;
+            margin-top: 20px; /* Adjust margin for chat interface */
+            text-align: center;
+        }
+        .message-success {
+            background-color: #e6f7ff;
+            border-color: #36a3f7;
+            color: #1a5e8a;
+        }
+        .message-error {
+            background-color: #ffe6e6;
+            border-color: #f73636;
+            color: #8a1a1a;
+        }
+        .message-warning {
+            background-color: #fffbe6;
+            border-color: #f7a336;
+            color: #8a5e1a;
+        }
+        .loading-text {
+            color: #6366f1;
+            font-weight: 600;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container rounded-xl shadow-lg">
+    <h1 class="text-4xl font-extrabold text-gray-800 mb-6 text-center">
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600">
+            AI Hotel Booker
+        </span>
+    </h1>
+    <p class="text-gray-600 text-lg text-center mb-6">
+        Chat with our intelligent assistant to book your perfect stay.
+    </p>
+
+    <!-- Chat Window -->
+    <div id="chatWindow" class="chat-window">
+        <!-- Initial bot message -->
+        <div class="message-bubble bot-message">Hello! I'm your AI Hotel Booker. How can I assist you today? Try saying something like, "I want to book a room or Book a room for me"</div>
+    </div>
+
+    <!-- Message Input Area -->
+    <div class="chat-input-area">
+        <input type="text" id="chatInput" placeholder="Type your message here..."
+               class="p-3 border border-gray-300 rounded-lg shadow-sm" autofocus>
+        <button id="sendMessageButton"
+                class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:from-blue-600 hover:to-indigo-700">
+            Send
+        </button>
+    </div>
+
+    <div id="messageDisplay" class="message-box hidden"></div>
+    <div id="loadingIndicator" class="hidden loading-text">
+        Processing your request...
+    </div>
+</div>
+
+<!-- AWS SDK -->
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.1093.0.min.js"></script>
+<script>
+    // Get references to HTML elements
+    const chatWindow = document.getElementById('chatWindow');
+    const chatInput = document.getElementById('chatInput');
+    const sendMessageButton = document.getElementById('sendMessageButton');
+    const messageDisplay = document.getElementById('messageDisplay');
+    const loadingIndicator = document.getElementById('loadingIndicator');
+
+    // Configure AWS SDK (Cognito Identity Pool ID remains the same)
+    AWS.config.region = 'us-east-1';
+    AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+        IdentityPoolId: 'COGNITO_IDENTITY_POOL_ID'
+    });
+
+    /**
+     * Appends a new message bubble to the chat window.
+     * @param {string} message - The text content of the message.
+     * @param {string} type - The type of message ('user' or 'bot').
+     */
+    function appendMessage(message, type) {
+        const messageBubble = document.createElement('div');
+        messageBubble.classList.add('message-bubble');
+        messageBubble.classList.add(type === 'user' ? 'user-message' : 'bot-message');
+        messageBubble.textContent = message;
+        chatWindow.appendChild(messageBubble);
+        // Scroll to the bottom of the chat window to show the latest message
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    /**
+     * Sends the user's message to AWS Lex and handles the response.
+     */
+    async function sendMessage() {
+        const inputText = chatInput.value.trim();
+
+        if (inputText === '') {
+            // If input is empty, do nothing
+            return;
+        }
+
+        // Clear any previous general error/success messages
+        messageDisplay.classList.add('hidden');
+        messageDisplay.textContent = '';
+
+        // Add user message to chat window
+        appendMessage(inputText, 'user');
+        chatInput.value = ''; // Clear input field
+
+        // Show loading indicator
+        loadingIndicator.classList.remove('hidden');
+        sendMessageButton.disabled = true; // Disable send button during processing
+
+        try {
+            // Ensure AWS credentials are loaded before making Lex call
+            await AWS.config.credentials.getPromise();
+            const lex = new AWS.LexRuntimeV2();
+
+            // Parameters for Lex recognizeText API
+            const params = {
+                botId: 'BOT_ID',         // Replace with your actual botId
+                botAliasId: 'BOT_ALIAS_ID',    // Replace with your actual botAliasId
+                localeId: 'en_US',           // Usually 'en_US'
+                sessionId: AWS.config.credentials.identityId, // Use Cognito identityId as session ID
+                text: inputText
+            };
+
+            // Call Lex API
+            const response = await lex.recognizeText(params).promise();
+
+            // Hide loading indicator and re-enable send button
+            loadingIndicator.classList.add('hidden');
+            sendMessageButton.disabled = false;
+
+            // Process Lex response
+            if (response && response.messages && response.messages.length > 0) {
+                const botMessageContent = response.messages[0].content;
+                appendMessage(botMessageContent, 'bot');
+            } else {
+                // If Lex response is empty or unexpected, show a generic bot message
+                appendMessage("I didn't quite catch that. Could you please rephrase?", 'bot');
+                // Also display a warning message on the general display area
+                messageDisplay.className = 'message-box message-warning';
+                messageDisplay.textContent = 'Received an empty or unexpected response from the bot.';
+                messageDisplay.classList.remove('hidden');
+            }
+
+        } catch (err) {
+            console.error("Lex Error:", err);
+            // Hide loading indicator and re-enable send button
+            loadingIndicator.classList.add('hidden');
+            sendMessageButton.disabled = false;
+
+            // Display error message to the user in the general display area
+            messageDisplay.textContent = err.message || 'Error connecting to the booking assistant. Please try again.';
+            messageDisplay.className = 'message-box message-error';
+            messageDisplay.classList.remove('hidden');
+        }
+    }
+
+    // Event listener for Send button click
+    sendMessageButton.addEventListener('click', sendMessage);
+
+    // Event listener for 'Enter' key press in the input field
+    chatInput.addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') {
+            sendMessage();
+        }
+    });
+
+    // Set initial focus on the chat input
+    window.onload = () => {
+        chatInput.focus();
+    };
+</script>
+</body>
+</html>

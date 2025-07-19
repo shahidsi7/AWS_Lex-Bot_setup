@@ -1,0 +1,18 @@
+| SlotName              | SlotType             | Prompt                                                                 |
+|-----------------------|----------------------|------------------------------------------------------------------------|
+| Username              | AMAZON.FirstName     | What is your name?                                                     |
+| RoomType              | RoomTypeValues       | Which type of room would you like? (Classic, Deluxe, Suite)            |
+| CheckInDate           | AMAZON.Date          | What is your check-in date?                                            |
+| NumNights             | AMAZON.Number        | How many nights will you stay?                                         |
+| NumAdults             | AMAZON.Number        | How many adults will be staying?                                       |
+| NumChildren           | AMAZON.Number        | And how many children?                                                 |
+| BedType               | BedType              | What kind of bed would you prefer? King, Queen, or Twin?               |
+| AccessibilityNeeds    | AMAZON.AlphaNumeric  | Do you have any specific accessibility needs?                          |
+| SmokingPreference     | Smoking              | Do you prefer a smoking or non-smoking room?                           |
+| City                  | AMAZON.City          | Which city are you planning to visit?                                  |
+| HotelName             | AMAZON.AlphaNumeric  | Is there a specific hotel name you have in mind?                       |
+| PriceRange            | AMAZON.Number        | What's your approximate budget per night?                              |
+| ContactEmail          | AMAZON.EmailAddress  | What's your email address for the booking confirmation?                |
+| ContactPhone          | AMAZON.PhoneNumber   | Could I get your phone number in case we need to contact you?          |
+| PreferredPaymentMethod| PaymentMethod        | How would you prefer to pay? Credit card or pay at the hotel?          |
+| SpecialRequests       | AMAZON.AlphaNumeric  | Do you have any other special requests for your stay?                  |
